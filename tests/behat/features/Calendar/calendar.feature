@@ -12,6 +12,7 @@ Feature: Calendar
     Given I am authenticated as "admin" using "changeme"
     And  I am on "/v2/calendar"
     And I click the "#newCalendarButton" element
+    And I wait for AJAX to finish
     Then I should see "New Calendar"
     And I fill in "calendarName" with "Test Calendar"
     And I fill in "ForegroundColor" with "000000"

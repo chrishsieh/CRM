@@ -58,7 +58,7 @@ class FeatureContext extends MinkContext
     * @Given /^I wait for AJAX to finish$/
     */
    public function iWaitForAjaxToFinish() {
-     $this->getSession()->wait(3000, '(typeof(jQuery)=="undefined" || (0 === jQuery.active && 0 === jQuery(\':animated\').length))');
+     $this->getSession()->wait(6000, '(typeof(jQuery)=="undefined" || (0 === jQuery.active && 0 === jQuery(\':animated\').length))');
    }
 }
 
