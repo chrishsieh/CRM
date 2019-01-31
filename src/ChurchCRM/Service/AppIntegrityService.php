@@ -3,7 +3,7 @@
 namespace ChurchCRM\Service;
 
 use ChurchCRM\dto\SystemURLs;
-use ChurchCRM\Utils\LoggerUtils;
+use ChurchCRM\dto\Prerequisite;
 use ChurchCRM\Utils\LoggerUtils;
 
 class AppIntegrityService
@@ -30,10 +30,10 @@ class AppIntegrityService
         AppIntegrityService::$IntegrityCheckDetails->message = gettext("integrityCheck.json file missing");
       }
     }
-    else { 
+    else {
       LoggerUtils::getAppLogger()->debug('Integrity check results already cached; not reloading from file');
     }
-    
+
     return AppIntegrityService::$IntegrityCheckDetails;
 
   }
@@ -167,20 +167,20 @@ class AppIntegrityService
     //   This header comes from index.php (which is the target of .htaccess for invalid URLs)
     $logger = LoggerUtils::getAppLogger();
     $check = AppIntegrityService::hasApacheModule('mod_rewrite');
-    $logger->debug("hasModRewrite:", ["hasApacheModule('mod_rewrite')" => ($check ? "true":"false")]);
+    $logger->info("hasModRewrite:", ["hasApacheModule('mod_rewrite')" => ($check ? "true":"false")]);
 
     if (!$check && function_exists('shell_exec')) {
-        $logger->debug("hasModRewrite:", ["shell_exec" => "exists"]);
-        $logger->debug("hasModRewrite:", ["SERVER_SOFTWARE" => strval($_SERVER['SERVER_SOFTWARE'])]);
+        $logger->info("hasModRewrite:", ["shell_exec" => "exists"]);
+        $logger->info("hasModRewrite:", ["SERVER_SOFTWARE" => strval($_SERVER['SERVER_SOFTWARE'])]);
 
         if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false) {
             $check = strpos(shell_exec('/usr/local/apache/bin/apachectl -l'), 'mod_rewrite') !== false;
-            $logger->debug("hasModRewrite:", ["check /usr/local/apache/bin/apachectl -l" => ($check ? "true":"false")]);
+            $logger->info("hasModRewrite:", ["check /usr/local/apache/bin/apachectl -l" => ($check ? "true":"false")]);
         }
     }
 
     if ( function_exists('curl_version')) {
-        $logger->debug("hasModRewrite:",["curl" => "exists"]);
+        $logger->info("hasModRewrite:",["curl" => "exists"]);
         $verbose = fopen('php://temp', 'w+');
         $ch = curl_init();
         $request_url_parser = parse_url($_SERVER['HTTP_REFERER']);
@@ -188,36 +188,17 @@ class AppIntegrityService
         $request_host = isset($request_url_parser['host']) ? $request_url_parser['host'] : 'localhost';
         $request_port = isset($request_url_parser['port']) ? $request_url_parser['port'] : (($request_scheme == 'https')? '443' : '80');
         $logger->debug("hasModRewrite:", ["HTTP_REFERER" => $_SERVER['HTTP_REFERER']]);
-        $logger->debug("hasModRewrite:", [["scheme: " => $request_scheme], ["host: " => $request_host], ["port: " => $request_port]]);
-        $rewrite_chk_url = $request_scheme ."://". $_SERVER['HTTP_HOST'] . SystemURLs::getRootPath()."/INVALID";
-        $logger->debug("hasModRewrite:", ["host ip" => gethostbyname($request_host)]);
+        $logger->debug("hasModRewrite:", [["host" => $request_host]]);
+        $logger->info("hasModRewrite:", [["scheme" => $request_scheme], ["port" => $request_port]]);
 
-        if ( gethostbyname($request_host) == '127.0.0.1') {
-            $logger->debug("hasModRewrite:", ["sapi_type" => php_sapi_name()]);
-            $sapi_type = php_sapi_name();
-
-            if ( $sapi_type == 'fpm-fcgi') {
-                if (fsockopen($_SERVER['SERVER_ADDR'], $request_port)) {
-                    $logger->debug("hasModRewrite:", ["Server ip mapping(".$request_host.":".$request_port.")" => $_SERVER['SERVER_ADDR']]);
-                    curl_setopt($ch, CURLOPT_RESOLVE, array(sprintf("%s:%d:%s", $request_host, $request_port, $_SERVER['SERVER_ADDR'])));
-                } else {
-                    $logger->debug("hasModRewrite:", ["Server ip mapping(".$request_host.":".(($request_scheme == 'https')? "443" : "80").")" => $_SERVER['SERVER_ADDR']]);
-                    $rewrite_chk_url = $request_scheme ."://". $request_host . SystemURLs::getRootPath()."/INVALID";
-                    curl_setopt($ch, CURLOPT_RESOLVE, array(sprintf("%s:%d:%s", $request_host, ($request_scheme == 'https')? "443" : "80", $_SERVER['SERVER_ADDR'])));
-                }
-            } else if (isset($_SERVER['HTTP_X_REAL_IP'])) {
-                $logger->debug("hasModRewrite:", ["HTTP_X_REAL_IP" => $_SERVER['HTTP_X_REAL_IP']]);
-
-                if (fsockopen($_SERVER['REMOTE_ADDR'], $request_port)) {
-                    $logger->debug("hasModRewrite:", ["Server ip mapping(".$request_host.":".$request_port.")" => $_SERVER['REMOTE_ADDR']]);
-                    curl_setopt($ch, CURLOPT_RESOLVE, array(sprintf("%s:%d:%s", $request_host, $request_port, $_SERVER['REMOTE_ADDR'])));
-                } else {
-                    $logger->debug("hasModRewrite:", ["Server ip mapping(".$request_host.":".(($request_scheme == 'https')? "443" : "80").")" => $_SERVER['REMOTE_ADDR']]);
-                    $rewrite_chk_url = $request_scheme ."://". $request_host . SystemURLs::getRootPath()."/INVALID";
-                    curl_setopt($ch, CURLOPT_RESOLVE, array(sprintf("%s:%d:%s", $request_host, ($request_scheme == 'https')? "443" : "80", $_SERVER['REMOTE_ADDR'])));
-                }
-            }
+        if (fsockopen($request_host, $request_port)) {
+            $rewrite_chk_url = $request_scheme ."://". $_SERVER['HTTP_HOST'] . SystemURLs::getRootPath()."/INVALID";
+        } else {
+          $request_port = ($request_scheme == 'https')? '443' : '80';
+          $logger->debug("hasModRewrite:", ["Server port mapping" => $request_port]);
+          $rewrite_chk_url = $request_scheme ."://".$request_host.":".$request_port."/".SystemURLs::getRootPath()."/INVALID";
         }
+
         $logger->debug("hasModRewrite:", ["Curl rewrite check url" => $rewrite_chk_url]);
         curl_setopt($ch, CURLOPT_URL, $rewrite_chk_url);
         curl_setopt($ch, CURLOPT_STDERR, $verbose);
@@ -240,12 +221,12 @@ class AppIntegrityService
               $headers[trim($middle[0])] = trim($middle[1]);
             }
         }
-        $check =  $headers['CRM'] == "would redirect";
+        $check = $headers['CRM'] == "would redirect";
 
         if ( $check == false) {
             rewind($verbose);
             $verboseLog = stream_get_contents($verbose);
-            $logger->warn("hasModRewrite:", ["Curl information" => [htmlspecialchars($verboseLog)]]);
+            $logger->debug("hasModRewrite:", ["Curl information" => [htmlspecialchars($verboseLog)]]);
         }
 
         fclose($verbose);
