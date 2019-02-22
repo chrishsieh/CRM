@@ -32,7 +32,8 @@ steps:
     - ./src
   # Mount the cache volume, needs "Trusted"
   volumes:
-    - /tmp/cache:/cache
+  - name: cache
+    path: /cache
   cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
 
 - name: Test-7.2
@@ -61,7 +62,8 @@ steps:
     - ./src
   # Mount the cache volume, needs "Trusted"
   volumes:
-    - /tmp/cache:/cache
+  - name: cache
+    path: /cache
   cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
 
 - name: test
@@ -106,3 +108,7 @@ services:
   volumes:
     - name: shm
       path: /dev/shm:/dev/shm
+
+volumes:
+- name: cache
+  path: /tmp/cache
