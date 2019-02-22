@@ -7,7 +7,7 @@ steps:
   environment:
     FORWARD_PORTS_TO_LOCALHOST: '3306:mysql:3306, 80:crm:80'
     PHP_MODULES_DISABLE: xdebug
-    DRONE_JOB_NUMBER : 1
+    DRONE_JOB_NUMBER : DRONE_BUILD_NUMBER
   volumes:
   - name: cache
     path: /cache
@@ -36,15 +36,12 @@ steps:
   environment:
     PLUGIN_MOUNT: 'drone/src/scripts drone/src/tests drone/src/src'
     PLUGIN_RESTORE: true
-    DRONE_JOB_NUMBER : 1
+    DRONE_JOB_NUMBER : DRONE_BUILD_NUMBER
   volumes:
   - name: cache
     path: /cache
   commands:
-  - echo "env" > /usr/local/cacher.sh
-  - echo "set" > /usr/local/cacher.sh
-  - echo "export" > /usr/local/cacher.sh
-  - /usr/local/cacher.sh
+  - set -x && /usr/local/cacher.sh
 
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
@@ -68,7 +65,7 @@ steps:
   environment:
     PLUGIN_MOUNT: 'drone/src/scripts drone/src/tests drone/src/src'
     PLUGIN_REBUILD: true
-    DRONE_JOB_NUMBER : 1
+    DRONE_JOB_NUMBER : DRONE_BUILD_NUMBER
   volumes:
   - name: cache
     path: /cache
