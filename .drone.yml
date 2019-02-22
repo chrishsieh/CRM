@@ -32,6 +32,7 @@ steps:
   environment:
     PLUGIN_MOUNT: './scripts ./tests ./src'
     PLUGIN_RESTORE: true
+  working_dir: /drone/src
   volumes:
   - name: cache
     path: /cache
@@ -58,6 +59,7 @@ steps:
   environment:
     PLUGIN_MOUNT: './scripts ./tests ./src'
     PLUGIN_REBUILD: true
+  working_dir: /drone/src
   volumes:
   - name: cache
     path: /cache
