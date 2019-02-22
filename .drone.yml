@@ -29,12 +29,9 @@ steps:
 
 - name: restore-cache
   image: drillster/drone-volume-cache
-  restore: true
-  mount:
-    - ./scripts
-    - ./tests
-    - ./src
-  # Mount the cache volume, needs "Trusted"
+  environment:
+    PLUGIN_MOUNT: [ ./scripts, ./tests, ./src ]
+    PLUGIN_RESTORE: true
   volumes:
   - name: cache
     path: /cache
@@ -58,12 +55,9 @@ steps:
 
 - name: retest-cache
   image: drillster/drone-volume-cache
-  rebuild: true
-  mount:
-    - ./scripts
-    - ./tests
-    - ./src
-  # Mount the cache volume, needs "Trusted"
+  environment:
+    PLUGIN_MOUNT: [ ./scripts, ./tests, ./src ]
+    PLUGIN_REBUILD: true
   volumes:
   - name: cache
     path: /cache
