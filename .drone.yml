@@ -69,7 +69,7 @@ steps:
 
 volumes:
 - name: cache
-  temp: {}
+  path: /tmp/cache
 
 services:
 - name: php
