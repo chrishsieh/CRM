@@ -12,7 +12,7 @@ $sPASSWORD = 'churchcrm';
 $sDATABASE = 'churchcrm_test';
 $sRootPath = '';
 $bLockURL = false;
-$URL[0] = 'http://crm/';
+$URL[0] = 'http://web_server/';
 
 // Sets which PHP errors are reported see http://php.net/manual/en/errorfunc.constants.php
 error_reporting(E_ERROR);
