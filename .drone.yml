@@ -26,7 +26,7 @@ steps:
 - name: restore-cache
   image: drillster/drone-volume-cache
   environment:
-    PLUGIN_MOUNT: scripts tests src
+    PLUGIN_MOUNT: ./
     PLUGIN_RESTORE: true
     DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
   volumes:
@@ -56,7 +56,7 @@ steps:
 - name: retest-cache
   image: drillster/drone-volume-cache
   environment:
-    PLUGIN_MOUNT: scripts tests src
+    PLUGIN_MOUNT: ./
     PLUGIN_REBUILD: true
     DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
   volumes:
