@@ -32,6 +32,9 @@ steps:
   volumes:
   - name: cache
     path: /cache
+  commands:
+  - sed -i "s/set -e/set -x/g" /usr/local/cacher.sh
+  - /usr/local/cacher.sh
 
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
