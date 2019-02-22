@@ -5,7 +5,7 @@ steps:
 - name: Clone
   image: alpine
   commands:
-  - cp /drone/src/Vagrant /tmp/cache
+  - cp /drone/src/Vagrantfile /tmp/cache
   - ls /tmp/cache
   volumes:
     - name: cache
@@ -94,6 +94,9 @@ services:
   volumes:
     - name: shm
       path: /dev/shm:/dev/shm
+
+depends_on:
+  - Clone
 
 volumes:
   - name: cache
