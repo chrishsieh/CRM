@@ -89,7 +89,7 @@
     {
       name: "php7.2",
       image: "devilbox/php-fpm:7.2-work",
-      environment:[
+      environment: [
         {FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm7.2:80"},
         {PHP_MODULES_DISABLE: "xdebug"}
       ],
