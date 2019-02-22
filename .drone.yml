@@ -34,7 +34,6 @@ steps:
   volumes:
   - name: cache
     path: /cache
-  cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
 
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
@@ -64,7 +63,6 @@ steps:
   volumes:
   - name: cache
     path: /cache
-  cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
 
 - name: test
   image: alpine
@@ -111,4 +109,4 @@ services:
 
 volumes:
 - name: cache
-  path: /tmp/cache
+  tmp: {}
