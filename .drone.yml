@@ -35,32 +35,6 @@ services:
     - /docker-entrypoint.sh
   working_dir: /var/www/default
 
----
-kind: pipeline
-name: Test
-
-clone:
-  disable: true
-
-steps:
-- name: Test-7.2
-  image: devilbox/php-fpm:7.2-work
-  environment:
-    FORWARD_PORTS_TO_LOCALHOST: '3306:mysql:3306, 80:crm:80'
-    PHP_MODULES_DISABLE: xdebug
-  commands:
-  - cp ./drone-ci/tests-run.sh ./scripts/tests-run.sh
-  - cp ./drone-ci/bootstrap.php ./tests/bootstrap.php
-  - npm run tests-install
-  - mysql --user=root --password=churchcrm --host=mysql -e "drop database IF EXISTS churchcrm_test;"
-  - mysql --user=root --password=churchcrm --host=mysql -e 'create database IF NOT EXISTS churchcrm_test;'
-  - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < src/mysql/install/Install.sql;
-  - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;
-  - cp ./drone-ci/Config.php ./src/Include/Config.php
-  - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
-  - npm run test
-
-services:
 - name: mysql
   image: cytopia/mariadb-10.3
   environment:
@@ -85,6 +59,28 @@ services:
   volumes:
     - name: shm
       path: /dev/shm:/dev/shm
+
+---
+kind: pipeline
+name: Test
+
+steps:
+- name: Test-7.2
+  image: devilbox/php-fpm:7.2-work
+  environment:
+    FORWARD_PORTS_TO_LOCALHOST: '3306:mysql:3306, 80:crm:80'
+    PHP_MODULES_DISABLE: xdebug
+  commands:
+  - cp ./drone-ci/tests-run.sh ./scripts/tests-run.sh
+  - cp ./drone-ci/bootstrap.php ./tests/bootstrap.php
+  - npm run tests-install
+  - mysql --user=root --password=churchcrm --host=mysql -e "drop database IF EXISTS churchcrm_test;"
+  - mysql --user=root --password=churchcrm --host=mysql -e 'create database IF NOT EXISTS churchcrm_test;'
+  - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < src/mysql/install/Install.sql;
+  - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;
+  - cp ./drone-ci/Config.php ./src/Include/Config.php
+  - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
+  - npm run test
 
 depends_on:
   - Build
