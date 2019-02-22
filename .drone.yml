@@ -52,7 +52,7 @@ steps:
   - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
   - npm run test
 
-- name: restore-cache
+- name: restore-cache-7.1
   image: chrishsieh/drone-volume-cache
   environment:
     PLUGIN_MOUNT: drone-ci
@@ -81,7 +81,7 @@ steps:
   - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
   - npm run test
 
-- name: restore-cache
+- name: restore-cache-7.2
   image: chrishsieh/drone-volume-cache
   environment:
     PLUGIN_MOUNT: drone-ci
