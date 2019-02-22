@@ -24,8 +24,8 @@ steps:
   - npm run orm-gen
   - ls /tmp/cache
   volumes:
-    - name: cache
-      path: /tmp/cache
+  - name: cache
+    path: /tmp/cache
 
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
@@ -83,5 +83,5 @@ services:
       path: /dev/shm:/dev/shm
 
 volumes:
-  - name: cache
-    path: {}
+- name: cache
+  temp: {}
