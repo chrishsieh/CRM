@@ -1,4 +1,4 @@
-local PipelineBuild = {
+[{
   kind: "pipeline",
   name: "Build&Test",
   steps: [
@@ -134,8 +134,4 @@ local PipelineBuild = {
       temp: "{}"
     }
   ]
-};
-
-[
-  PipelineBuild
-]
+}]
