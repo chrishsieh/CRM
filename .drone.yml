@@ -22,6 +22,10 @@ steps:
   - npm install --unsafe-perm
   - npm run composer-install
   - npm run orm-gen
+  - mkdir /cache/DRONE_REPO_OWNER/DRONE_REPO_NAME/DRONE_BRANCH/DRONE_JOB_NUMBER
+  volumes:
+  - name: cache
+    path: /cache
 
 - name: restore-cache
   image: drillster/drone-volume-cache
@@ -31,6 +35,7 @@ steps:
     - ./tests
     - ./src
   # Mount the cache volume, needs "Trusted"
+  cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
   volumes:
   - name: cache
     path: /cache
@@ -60,6 +65,7 @@ steps:
     - ./tests
     - ./src
   # Mount the cache volume, needs "Trusted"
+  cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
   volumes:
   - name: cache
     path: /cache
