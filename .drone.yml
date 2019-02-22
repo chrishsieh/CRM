@@ -24,16 +24,16 @@ steps:
   - npm run orm-gen
 
 - name: restore-cache
-    image: drillster/drone-volume-cache
-    restore: true
-    mount:
-      - ./scripts
-      - ./tests
-      - ./src
-    # Mount the cache volume, needs "Trusted"
-    volumes:
-      - /tmp/cache:/cache
-    cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
+  image: drillster/drone-volume-cache
+  restore: true
+  mount:
+    - ./scripts
+    - ./tests
+    - ./src
+  # Mount the cache volume, needs "Trusted"
+  volumes:
+    - /tmp/cache:/cache
+  cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
 
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
@@ -53,16 +53,16 @@ steps:
   - npm run test
 
 - name: retest-cache
-    image: drillster/drone-volume-cache
-    rebuild: true
-    mount:
-      - ./scripts
-      - ./tests
-      - ./src
-    # Mount the cache volume, needs "Trusted"
-    volumes:
-      - /tmp/cache:/cache
-    cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
+  image: drillster/drone-volume-cache
+  rebuild: true
+  mount:
+    - ./scripts
+    - ./tests
+    - ./src
+  # Mount the cache volume, needs "Trusted"
+  volumes:
+    - /tmp/cache:/cache
+  cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
 
 - name: test
   image: alpine
