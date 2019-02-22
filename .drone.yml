@@ -2,7 +2,7 @@ kind: pipeline
 name: Build
 
 steps:
-- name: Build
+- name: build
   image: devilbox/php-fpm:7.2-work
   environment:
     FORWARD_PORTS_TO_LOCALHOST: '3306:mysql:3306, 80:crm:80'
@@ -22,10 +22,18 @@ steps:
   - npm install --unsafe-perm
   - npm run composer-install
   - npm run orm-gen
-  - ls /tmp/cache
-  volumes:
-  - name: cache
-    path: /tmp/cache
+
+- name: restore-cache
+    image: drillster/drone-volume-cache
+    restore: true
+    mount:
+      - ./scripts
+      - ./tests
+      - ./src
+    # Mount the cache volume, needs "Trusted"
+    volumes:
+      - /tmp/cache:/cache
+    cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
 
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
@@ -43,6 +51,23 @@ steps:
   - cp ./drone-ci/Config.php ./src/Include/Config.php
   - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
   - npm run test
+
+- name: retest-cache
+    image: drillster/drone-volume-cache
+    rebuild: true
+    mount:
+      - ./scripts
+      - ./tests
+      - ./src
+    # Mount the cache volume, needs "Trusted"
+    volumes:
+      - /tmp/cache:/cache
+    cache_key: [ DRONE_REPO_OWNER, DRONE_REPO_NAME, DRONE_BRANCH, DRONE_JOB_NUMBER ]
+
+- name: test
+  image: alpine
+  commands:
+    - cat ./tests/behat/behat.yml
 
 services:
 - name: php
@@ -81,7 +106,3 @@ services:
   volumes:
     - name: shm
       path: /dev/shm:/dev/shm
-
-volumes:
-- name: cache
-  temp: {}
