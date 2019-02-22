@@ -30,7 +30,7 @@ steps:
 - name: restore-cache
   image: drillster/drone-volume-cache
   environment:
-    PLUGIN_MOUNT: './scripts ./tests ./src'
+    PLUGIN_MOUNT: '/drone/src/scripts /drone/src/tests /drone/src/src'
     PLUGIN_RESTORE: true
   working_dir: /drone/src
   volumes:
@@ -57,9 +57,8 @@ steps:
 - name: retest-cache
   image: drillster/drone-volume-cache
   environment:
-    PLUGIN_MOUNT: './scripts ./tests ./src'
+    PLUGIN_MOUNT: '/drone/src/scripts /drone/src/tests /drone/src/src'
     PLUGIN_REBUILD: true
-  working_dir: /drone/src
   volumes:
   - name: cache
     path: /cache
