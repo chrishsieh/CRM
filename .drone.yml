@@ -22,6 +22,9 @@ steps:
   - npm install --unsafe-perm
   - npm run composer-install
   - npm run orm-gen
+  volumes:
+  - name: cache
+    path: /tmp/cache
 
 services:
 - name: php
@@ -34,6 +37,9 @@ services:
     - ln -s /drone/src/src/ /var/www/default/htdocs
     - /docker-entrypoint.sh
   working_dir: /var/www/default
+  volumes:
+  - name: cache
+    path: /tmp/cache
 
 - name: mysql
   image: cytopia/mariadb-10.3
@@ -81,6 +87,13 @@ steps:
   - cp ./drone-ci/Config.php ./src/Include/Config.php
   - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
   - npm run test
+  volumes:
+  - name: cache
+    path: /tmp/cache
 
 depends_on:
   - Build
+
+volumes:
+- name: cache
+  temp: {}
