@@ -7,6 +7,10 @@ steps:
   environment:
     FORWARD_PORTS_TO_LOCALHOST: '3306:mysql:3306, 80:crm:80'
     PHP_MODULES_DISABLE: xdebug
+    DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
+  volumes:
+  - name: cache
+    path: /cache
   commands:
   - export DB=mysql
   - php --version
@@ -22,11 +26,15 @@ steps:
   - npm install --unsafe-perm
   - npm run composer-install
   - npm run orm-gen
+  - mkdir /cache/$DRONE_REPO_OWNER/$DRONE_REPO_NAME/$DRONE_JOB_NUMBER/scripts
+  - mkdir /cache/$DRONE_REPO_OWNER/$DRONE_REPO_NAME/$DRONE_JOB_NUMBER/tests
+  - mkdir /cache/$DRONE_REPO_OWNER/$DRONE_REPO_NAME/$DRONE_JOB_NUMBER/src
+  - ls /cache/$DRONE_REPO_OWNER/$DRONE_REPO_NAME/$DRONE_JOB_NUMBER
 
 - name: restore-cache
   image: drillster/drone-volume-cache
   environment:
-    PLUGIN_MOUNT: ./
+    PLUGIN_MOUNT: (scripts tests src)
     PLUGIN_RESTORE: true
     DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
   volumes:
@@ -56,7 +64,7 @@ steps:
 - name: retest-cache
   image: drillster/drone-volume-cache
   environment:
-    PLUGIN_MOUNT: ./
+    PLUGIN_MOUNT: (scripts tests src)
     PLUGIN_REBUILD: true
     DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
   volumes:
