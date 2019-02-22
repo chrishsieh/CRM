@@ -2,16 +2,6 @@ kind: pipeline
 name: Build
 
 steps:
-- name: init-cache
-  image: chrishsieh/drone-volume-cache
-  environment:
-    PLUGIN_MOUNT: scripts,tests,src
-    PLUGIN_INIT: true
-    DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
-  volumes:
-  - name: cache
-    path: /cache
-
 - name: build
   image: devilbox/php-fpm:7.2-work
   environment:
@@ -33,11 +23,11 @@ steps:
   - npm run composer-install
   - npm run orm-gen
 
-- name: restore-cache
+- name: store-cache
   image: chrishsieh/drone-volume-cache
   environment:
     PLUGIN_MOUNT: scripts,tests,src
-    PLUGIN_RESTORE: true
+    PLUGIN_REBUILD: true
     DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
   volumes:
   - name: cache
@@ -60,11 +50,11 @@ steps:
   - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
   - npm run test
 
-- name: retest-cache
+- name: restore-cache
   image: chrishsieh/drone-volume-cache
   environment:
     PLUGIN_MOUNT: scripts,tests,src
-    PLUGIN_REBUILD: true
+    PLUGIN_RESTORE: true
     DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
   volumes:
   - name: cache
