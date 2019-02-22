@@ -38,6 +38,10 @@ services:
 ---
 kind: pipeline
 name: Test
+
+clone:
+  disable: true
+
 steps:
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
