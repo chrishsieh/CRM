@@ -1,4 +1,4 @@
-[{
+{
   kind: "pipeline",
   name: "Build&Test",
   steps: [
@@ -134,4 +134,4 @@
       temp: "{}"
     }
   ]
-}]
+}
