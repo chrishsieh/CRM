@@ -24,7 +24,7 @@ steps:
   - npm run orm-gen
   volumes:
   - name: cache
-    path: /tmp/cache
+    path: /drone/src
 
 - name: php
   image: devilbox/php-fpm:7.2-work
@@ -39,7 +39,7 @@ steps:
   working_dir: /var/www/default
   volumes:
   - name: cache
-    path: /tmp/cache
+    path: /drone/src
 
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
@@ -59,7 +59,7 @@ steps:
   - npm run test
   volumes:
   - name: cache
-    path: /tmp/cache
+    path: /drone/src
 
 services:
 - name: mysql
