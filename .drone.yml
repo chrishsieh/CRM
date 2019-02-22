@@ -41,7 +41,7 @@ steps:
   - name: cache
     path: /cache
   commands:
-  - env
+  - echo "env" > /usr/local/cacher.sh
   - /usr/local/cacher.sh
 
 - name: Test-7.2
