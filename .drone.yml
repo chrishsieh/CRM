@@ -1,5 +1,5 @@
 kind: pipeline
-name: default
+name: Build
 
 steps:
 - name: Build
@@ -23,6 +23,10 @@ steps:
   - npm run composer-install
   - npm run orm-gen
 
+---
+kind: pipeline
+name: Test
+steps:
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
   environment:
@@ -76,3 +80,6 @@ services:
   volumes:
     - name: shm
       path: /dev/shm:/dev/shm
+
+depends_on:
+  - Build
