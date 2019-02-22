@@ -31,18 +31,25 @@ steps:
   - mkdir -p /cache/$DRONE_REPO_OWNER/$DRONE_REPO_NAME/$DRONE_JOB_NUMBER/src
   - ls /cache/$DRONE_REPO_OWNER/$DRONE_REPO_NAME/$DRONE_JOB_NUMBER
 
-- name: restore-cache
-  image: drillster/drone-volume-cache
+- name: init-cache
+  image: chrishsieh/drone-volume-cache
   environment:
-    PLUGIN_MOUNT: (scripts tests src)
+    PLUGIN_MOUNT: (scripts,tests,src)
+    PLUGIN_INIT: true
+    DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
+  volumes:
+  - name: cache
+    path: /cache
+
+- name: restore-cache
+  image: chrishsieh/drone-volume-cache
+  environment:
+    PLUGIN_MOUNT: (scripts,tests,src)
     PLUGIN_RESTORE: true
     DRONE_JOB_NUMBER: ${DRONE_BUILD_NUMBER}
   volumes:
   - name: cache
     path: /cache
-  commands:
-  - sed -i "s/set -e/set -x/g" /usr/local/cacher.sh
-  - /usr/local/cacher.sh
 
 - name: Test-7.2
   image: devilbox/php-fpm:7.2-work
@@ -62,7 +69,7 @@ steps:
   - npm run test
 
 - name: retest-cache
-  image: drillster/drone-volume-cache
+  image: chrishsieh/drone-volume-cache
   environment:
     PLUGIN_MOUNT: (scripts tests src)
     PLUGIN_REBUILD: true
