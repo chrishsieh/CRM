@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 
 steps:
-- name: frontend
+- name: Build
   image: devilbox/php-fpm:7.2-work
   environment:
     FORWARD_PORTS_TO_LOCALHOST: '3306:mysql:3306, 80:crm:80'
@@ -22,26 +22,21 @@ steps:
   - npm install --unsafe-perm
   - npm run composer-install
   - npm run orm-gen
-  - sed -i "s;/vagrant;/drone/src;g" ./scripts/tests-run.sh
-  - sed -i 's;{"goutte"\ :\ "~","selenium2":"~"};{"selenium2"\ :\ {\ "wd_host":\ "http://selenium:4444/wd/hub"}};g' ./scripts/tests-run.sh
-  - sed -i "s/SERVERNAME = 'localhost';/SERVERNAME = 'mysql';/g" ./tests/bootstrap.php
-  - sed -i "s,$sRootPath = '/src';,$sRootPath = '';,g" ./tests/bootstrap.php
+
+- name: Test-7.2
+  image: devilbox/php-fpm:7.2-work
+  environment:
+    FORWARD_PORTS_TO_LOCALHOST: '3306:mysql:3306, 80:crm:80'
+    PHP_MODULES_DISABLE: xdebug
+  commands:
+  - cp ./drone-ci/tests-run.sh ./scripts/tests-run.sh
+  - cp ./drone-ci/bootstrap.php ./tests/bootstrap.php
   - npm run tests-install
   - mysql --user=root --password=churchcrm --host=mysql -e 'create database IF NOT EXISTS churchcrm_test;'
   - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < src/mysql/install/Install.sql;
   - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;
-  - cp ./travis-ci/Config.php ./src/Include/Config.php
-  - sed -i "s/SERVERNAME = 'localhost';/SERVERNAME = 'mysql';/g" ./src/Include/Config.php
-  - sed -i "s/PASSWORD = '';/PASSWORD = 'churchcrm';/g" ./src/Include/Config.php
-  - sed -i "s;'http://127.0.0.1/';'http://crm/';g" ./src/Include/Config.php
-  - sed -i "s;http://localhost;http://crm;g" ./tests/behat/behat.yml
-  - sed -i "s;Chrome;chrome;g" ./tests/behat/behat.yml
-  - sed -i "s;platform:\ Windows\ 10;browser:\ chrome;g" ./tests/behat/behat.yml
-  - sed -i "s;version:\ 67.0;marionette:\ true;g" ./tests/behat/behat.yml
-  - cat ./scripts/tests-run.sh
-  - cat ./tests/bootstrap.php
-  - cat ./src/Include/Config.php
-  - cat ./tests/behat/behat.yml
+  - cp ./drone-ci/Config.php ./src/Include/Config.php
+  - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
   - npm run test
 
 services:
