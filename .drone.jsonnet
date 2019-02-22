@@ -1,4 +1,4 @@
-{
+local PipelineBuild = {
   kind: "pipeline",
   name: "Build&Test",
   steps: [
@@ -134,4 +134,8 @@
       temp: "{}"
     }
   ]
-}
+};
+
+[
+  PipelineBuild
+]
