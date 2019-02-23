@@ -48,7 +48,6 @@ local TestVersion(php_ver) = {
   environment: {
       "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306, 80:crm"+ php_ver + ":80",
       "PHP_MODULES_DISABLE": "xdebug",
-      "TEST_PHP_VER": php_ver,
     },
   commands: [
       "cp ./drone-ci/tests-run.sh ./scripts/tests-run.sh",
@@ -58,8 +57,8 @@ local TestVersion(php_ver) = {
       "mysql --user=root --password=churchcrm --host=mysql -e 'create database IF NOT EXISTS churchcrm_test;'",
       "mysql --user=root --password=churchcrm --host=mysql churchcrm_test < src/mysql/install/Install.sql;",
       "mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;",
-      "sed -i 's/web_server/crm$TEST_PHP_VER/g' ./drone-ci/Config.php",
-      "sed -i 's/web_server/crm$TEST_PHP_VER/g' ./drone-ci/behat.yml",
+      "sed -i 's/web_server/crm" + php_ver + "/g' ./drone-ci/Config.php",
+      "sed -i 's/web_server/crm" + php_ver + "/g' ./drone-ci/behat.yml",
       "cp ./drone-ci/Config.php ./src/Include/Config.php",
       "cp ./drone-ci/behat.yml ./tests/behat/behat.yml",
       "npm run test",
