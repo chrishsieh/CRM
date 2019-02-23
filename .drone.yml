@@ -37,8 +37,8 @@ steps:
   - name: cache
     path: /cache
 
-- name: Test-7.1
-  image: devilbox/php-fpm:7.1-work
+- name: Test-7.2
+  image: devilbox/php-fpm:7.2-work
   commands:
   - cp ./drone-ci/tests-run.sh ./scripts/tests-run.sh
   - cp ./drone-ci/bootstrap.php ./tests/bootstrap.php
@@ -55,9 +55,9 @@ steps:
   environment:
     FORWARD_PORTS_TO_LOCALHOST: 3306:mysql:3306
     PHP_MODULES_DISABLE: xdebug
-    TEST_PHP_VER: 7.1
+    TEST_PHP_VER: 7.2
 
-- name: restore-cache-7.1
+- name: restore-cache-7.2
   image: chrishsieh/drone-volume-cache
   environment:
     PLUGIN_MOUNT: drone-ci
