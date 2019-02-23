@@ -1,45 +1,47 @@
+local StepBuild = {
+  name: "build",
+  image: "devilbox/php-fpm:7.2-work",
+  environment: {
+    "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306",
+    "PHP_MODULES_DISABLE": "xdebug",
+  },
+  commands: [
+    "export DB=mysql",
+    "php --version",
+    "node --version",
+    "composer --version",
+    "apt-get update",
+    "apt-get install -y ruby-full",
+    "gem install sass -v 3.4.25",
+    "chmod +x ./travis-ci/*.sh",
+    "chmod +x ./scripts/*.sh",
+    "cp BuildConfig.json.example BuildConfig.json",
+    "chown -R devilbox:devilbox /drone/src/src",
+    "npm install --unsafe-perm",
+    "npm run composer-install",
+    "npm run orm-gen",
+  ],
+};
+local StoreCache = {
+  name: "store-cache",
+  image: "chrishsieh/drone-volume-cache",
+  environment: {
+    "PLUGIN_MOUNT": "drone-ci",
+    "PLUGIN_REBUILD": "true",
+  },
+  volumes: [
+    {
+    name: "cache",
+    path: "/cache",
+    },
+  ],
+};
 {
   kind: "pipeline",
   name: "Build&Test",
   steps: [
-    {
-      name: "build",
-      image: "devilbox/php-fpm:7.2-work",
-      environment: {
-        "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306, 80:crm:80",
-        "PHP_MODULES_DISABLE": "xdebug",
-      },
-      commands: [
-        "export DB=mysql",
-        "php --version",
-        "node --version",
-        "composer --version",
-        "apt-get update",
-        "apt-get install -y ruby-full",
-        "gem install sass -v 3.4.25",
-        "chmod +x ./travis-ci/*.sh",
-        "chmod +x ./scripts/*.sh",
-        "cp BuildConfig.json.example BuildConfig.json",
-        "chown -R devilbox:devilbox /drone/src/src",
-        "npm install --unsafe-perm",
-        "npm run composer-install",
-        "npm run orm-gen",
-      ]
-    },
-    {
-      name: "store-cache",
-      image: "chrishsieh/drone-volume-cache",
-      environment: {
-        "PLUGIN_MOUNT": "drone-ci",
-        "PLUGIN_REBUILD": "true",
-      },
-      volumes: [
-        {
-        name: "cache",
-        path: "/cache",
-        },
-      ],
-    },
+    StepBuild,
+    StoreCache,
     {
     name: "Test-7.1",
     image: "devilbox/php-fpm:7.1-work",
@@ -52,12 +54,12 @@
         "cp ./drone-ci/tests-run.sh ./scripts/tests-run.sh",
         "cp ./drone-ci/bootstrap.php ./tests/bootstrap.php",
         "npm run tests-install",
-        'mysql --user=root --password=churchcrm --host=mysql -e "drop database IF EXISTS churchcrm_test;"',
+        "mysql --user=root --password=churchcrm --host=mysql -e 'drop database IF EXISTS churchcrm_test;'",
         "mysql --user=root --password=churchcrm --host=mysql -e 'create database IF NOT EXISTS churchcrm_test;'",
         "mysql --user=root --password=churchcrm --host=mysql churchcrm_test < src/mysql/install/Install.sql;",
         "mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;",
-        'sed -i "s/web_server/crm$TEST_PHP_VER/g" ./drone-ci/Config.php',
-        'sed -i "s/web_server/crm$TEST_PHP_VER/g" ./drone-ci/behat.yml',
+        "sed -i 's/web_server/crm$TEST_PHP_VER/g' ./drone-ci/Config.php",
+        "sed -i 's/web_server/crm$TEST_PHP_VER/g' ./drone-ci/behat.yml",
         "cp ./drone-ci/Config.php ./src/Include/Config.php",
         "cp ./drone-ci/behat.yml ./tests/behat/behat.yml",
         "npm run test",
