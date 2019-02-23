@@ -46,7 +46,7 @@ local TestVersion(php_ver) = {
   name: "Test-" + php_ver,
   image: "devilbox/php-fpm:" + php_ver + "-work",
   environment: {
-      "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306",
+      "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306, 80:crm"+ php_ver + ":80",
       "PHP_MODULES_DISABLE": "xdebug",
       "TEST_PHP_VER": php_ver,
     },
