@@ -148,4 +148,4 @@ local PipeMain =
   ],
 };
 
-PipeMain + StartTestVer("7.0") + StartTestVer("7.1") + StartTestVer("7.2") + StartTestVer("7.3")
+[ PipeMain + StartTestVer("7.0") + StartTestVer("7.1") + StartTestVer("7.2") + StartTestVer("7.3") ]
