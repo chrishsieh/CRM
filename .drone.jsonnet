@@ -1,3 +1,7 @@
+local PhpTestVerArr = [ "7.0", "7.1", "7.2" ];
+local ApacheTestVer = "2.4";
+local MeriadbTestVer = "10.3";
+
 local CacheVolume = {
   name: "cache",
   path: "/cache",
@@ -124,22 +128,24 @@ local ServiceSelenium = {
   ],
 };
 
+local StartBuild = [ StepBuild, StoreCache, ];
+local StartTestVer(php_ver) = {
+  steps+: [ TestVersion(php_ver) , RestoreCache(php_ver), ],
+  services+: [ ServicePhp(php_ver), ServiceWeb(php_ver, "2.4"), ],
+};
+
+local PipeMain = 
 {
   kind: "pipeline",
   name: "Build&Test",
-  steps: [
-    StepBuild,
-    StoreCache,
-    TestVersion("7.2"),
-    RestoreCache("7.2"),
-  ],
+  steps: StartBuild,
   services: [
     ServiceDb("10.3"),
-    ServicePhp("7.2"),
-    ServiceWeb("7.2", "2.4"),
     ServiceSelenium,
   ],
   volumes: [
     CacheVolumeMountPath,
   ],
-}
+};
+
+PipeMain + StartTestVer("7.0") + StartTestVer("7.1") + StartTestVer("7.2") + StartTestVer("7.3")
