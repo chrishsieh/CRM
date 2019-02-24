@@ -1,4 +1,3 @@
-local PhpTestVerArr = [ "7.0", "7.1", "7.2" ];
 local ApacheTestVer = "2.4";
 local MeriadbTestVer = "10.3";
 
@@ -148,4 +147,4 @@ local PipeMain =
   ],
 };
 
-[ PipeMain + StartTestVer("7.0") + StartTestVer("7.1") + StartTestVer("7.2") + StartTestVer("7.3") ]
+[ PipeMain + StartTestVer("7.0") + StartTestVer("7.1") + StartTestVer("7.2") ]
