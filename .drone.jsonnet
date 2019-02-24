@@ -1,14 +1,6 @@
 local ApacheTestVer = "2.4";
 local MeriadbTestVer = "10.3";
 
-local CacheVolume = {
-  name: "cache",
-  path: "/cache",
-};
-local CacheVolumeMountPath = {
-  name: "cache",
-  temp: {},
-};
 local CacheMountPath = "drone-ci";
 local StepBuild = {
   name: "build",
@@ -41,9 +33,10 @@ local StoreCache = {
     "PLUGIN_MOUNT": CacheMountPath,
     "PLUGIN_REBUILD": "true",
   },
-  volumes: [
-    CacheVolume,
-  ],
+  volumes: [ {
+    name: "cache",
+    path: "/cache",
+  }],
 };
 local TestVersion(php_ver) = {
   name: "Test-" + php_ver,
@@ -74,9 +67,10 @@ local RestoreCache(php_ver) = {
     "PLUGIN_MOUNT": CacheMountPath,
     "PLUGIN_RESTORE": "true",
   },
-  volumes: [
-    CacheVolume,
-  ]
+  volumes: [ {
+    name: "cache",
+    path: "/cache",
+  }],
 };
 local ServiceDb(meriadb_ver) = {
   name: "mysql",
@@ -130,7 +124,7 @@ local ServiceSelenium = {
 local StartBuild = [ StepBuild, StoreCache, ];
 local StartTestVer(php_ver) = {
   steps+: [ TestVersion(php_ver) , RestoreCache(php_ver), ],
-  services+: [ ServicePhp(php_ver), ServiceWeb(php_ver, "2.4"), ],
+  services+: [ ServicePhp(php_ver), ServiceWeb(php_ver, ApacheTestVer), ],
 };
 
 local PipeMain = 
@@ -139,12 +133,13 @@ local PipeMain =
   name: "Build&Test",
   steps: StartBuild,
   services: [
-    ServiceDb("10.3"),
+    ServiceDb(MeriadbTestVer),
     ServiceSelenium,
   ],
-  volumes: [
-    CacheVolumeMountPath,
-  ],
+  volumes: [{
+    name: "cache",
+    temp: {},
+  }],
 };
 
 [ PipeMain + StartTestVer("7.0") + StartTestVer("7.1") + StartTestVer("7.2") ]
