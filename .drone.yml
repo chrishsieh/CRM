@@ -54,7 +54,7 @@ steps:
     debug: true
     template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test PHP:7.0 **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}"
     urls:
-      from_secret: gitter_webhok
+      from_secret: gitter_travis_webhok
   when:
     status:
     - success

@@ -13,7 +13,7 @@ local StepGitter(php_string) =
   image: "plugins/webhook",
   settings: {
     urls: {
-      from_secret: "gitter_webhok",
+      from_secret: "gitter_travis_webhok",
     },
     debug: true,
     content_type: "application/x-www-form-urlencoded",
