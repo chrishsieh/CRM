@@ -52,7 +52,7 @@ steps:
   settings:
     content_type: application/x-www-form-urlencoded
     debug: true
-    template: "icon=smile;message=Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test PHP:7.0 **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}"
+    template: "icon=smile,message=Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test PHP:7.0 **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}"
     urls:
       from_secret: gitter_webhok
   when:
