@@ -32,6 +32,9 @@ local StepBuild(php_ver) = {
   environment: CommonEnv,
   commands: [
     "export DB=mysql",
+    "env",
+    "export",
+    "set",
     "php X--version",
     "node --version",
     "composer --version",
