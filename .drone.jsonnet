@@ -31,7 +31,7 @@ local StepBuild(php_ver) = {
   image: CommonPhpImg(php_ver),
   environment: CommonEnv,
   settings: {
-    urls: {
+    token: {
       from_secret: "gitter_travis_webhok",
     },
   },

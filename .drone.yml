@@ -30,7 +30,7 @@ steps:
   - npm run orm-gen
   - npm run build-react
   settings:
-    urls:
+    token:
       from_secret: gitter_travis_webhok
   environment:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
