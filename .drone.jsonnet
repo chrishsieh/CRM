@@ -30,6 +30,11 @@ local StepBuild(php_ver) = {
   name: "build",
   image: CommonPhpImg(php_ver),
   environment: CommonEnv,
+  settings: {
+    urls: {
+      from_secret: "gitter_travis_webhok",
+    },
+  },
   commands: [
     "export DB=mysql",
     "env",
