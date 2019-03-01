@@ -119,7 +119,7 @@ local ServiceSelenium = {
     }
   ],
 };
-local PipeNotify(php_string) =
+local PipeNotify =
 {
   name: "notify_test",
   image: "chrishsieh/drone_webhook",
@@ -157,4 +157,6 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
 
 [
   PipeMain(ApacheTestVer, MeriadbTestVer, php) for php in PhpTestVers
+] + [
+  PipeNotify
 ]

@@ -103,4 +103,14 @@ services:
   - name: shm
     path: /dev/shm:/dev/shm
 
+---
+name: notify_test
+
+platform:
+  os: linux
+  arch: amd64
+
+depends_on:
+- PHP:7.0
+
 ...
