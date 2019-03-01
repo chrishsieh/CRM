@@ -110,6 +110,11 @@ platform:
   os: linux
   arch: amd64
 
+trigger:
+  status:
+  - success
+  - failure
+
 depends_on:
 - PHP:7.0
 

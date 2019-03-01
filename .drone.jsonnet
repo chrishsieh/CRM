@@ -128,7 +128,7 @@ local PipeNotify =
       from_secret: "drone_api",
     },
   },
-  when: {
+  trigger: {
     status: [
       "success",
       "failure",
