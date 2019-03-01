@@ -121,19 +121,22 @@ local ServiceSelenium = {
 };
 local PipeNotify =
 {
-  name: "notify_test",
-  image: "chrishsieh/drone_webhook",
-  settings: {
-    token: {
-      from_secret: "drone_api",
+  kind: "pipeline",
+  name: "Notify",
+  clone: {
+    disable: true,
+  },
+  steps: [
+    {
+      name: "notify",
+      image: "chrishsieh/drone_webhook",
+      settings: {
+        token: {
+          from_secret: "drone_api",
+        },
+      },
     },
-  },
-  trigger: {
-    status: [
-      "success",
-      "failure",
-    ],
-  },
+  ],
   depends_on: [
     "PHP:"+php_ver for php_ver in PhpTestVers
   ],
