@@ -137,6 +137,12 @@ local PipeNotify =
       },
     },
   ],
+  trigger: {
+    status: [
+      "success",
+      "failure",
+    ],
+  },
   depends_on: [
     "PHP:"+php_ver for php_ver in PhpTestVers
   ],

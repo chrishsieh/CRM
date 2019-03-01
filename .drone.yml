@@ -121,6 +121,11 @@ steps:
     token:
       from_secret: drone_api
 
+trigger:
+  status:
+  - success
+  - failure
+
 depends_on:
 - PHP:7.0
 
