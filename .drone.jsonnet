@@ -119,7 +119,25 @@ local ServiceSelenium = {
     }
   ],
 };
-
+local PipeNotify(php_string) =
+{
+  name: "notify_test",
+  image: "chrishsieh/drone_webhook",
+  settings: {
+    token: {
+      from_secret: "drone_api",
+    },
+  },
+  when: {
+    status: [
+      "success",
+      "failure",
+    ],
+  },
+  depends_on: [
+    "PHP:"+php_ver for php_ver in PhpTestVers
+  ],
+};
 local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
 {
   kind: "pipeline",
