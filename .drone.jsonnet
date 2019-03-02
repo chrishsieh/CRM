@@ -1,6 +1,6 @@
 local ApacheTestVer = "2.4";
 local MeriadbTestVer = "10.3";
-local PhpTestVers = ["7.0"];
+local PhpTestVers = ["7.0", "7.1", "7.2"];
 
 local CommonEnv = {
   "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306, 80:crm:80",
@@ -30,19 +30,12 @@ local StepBuild(php_ver) = {
   name: "build",
   image: CommonPhpImg(php_ver),
   environment: CommonEnv,
-  settings: {
-    token: {
-      from_secret: "gitter_travis_webhok",
-    },
-    on_success: "change",
-    on_failure: "always",
-  },
   commands: [
     "export DB=mysql",
     "env",
     "export",
     "set",
-    "php X--version",
+    "php --version",
     "node --version",
     "composer --version",
     "composer global require hirak/prestissimo",
