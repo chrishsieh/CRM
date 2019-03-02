@@ -120,6 +120,8 @@ steps:
 - name: notify
   image: chrishsieh/drone_webhook
   settings:
+    on_failure: always
+    on_success: always
     token:
       from_secret: drone_api
 

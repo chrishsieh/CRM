@@ -136,6 +136,8 @@ local PipeNotify =
         token: {
           from_secret: "drone_api",
         },
+        on_success: "always",
+        on_failure: "always",
       },
     },
   ],
