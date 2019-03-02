@@ -30,6 +30,8 @@ steps:
   - npm run orm-gen
   - npm run build-react
   settings:
+    on_failure: always
+    on_success: change
     token:
       from_secret: gitter_travis_webhok
   environment:
