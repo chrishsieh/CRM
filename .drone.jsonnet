@@ -34,6 +34,8 @@ local StepBuild(php_ver) = {
     token: {
       from_secret: "gitter_travis_webhok",
     },
+    on_success: "change",
+    on_failure: "always",
   },
   commands: [
     "export DB=mysql",
