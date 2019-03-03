@@ -35,7 +35,7 @@ local StepBuild(php_ver) = {
     "env",
     "export",
     "set",
-    "php --version",
+    "php X--version",
     "node --version",
     "composer --version",
     "composer global require hirak/prestissimo",
