@@ -1,6 +1,6 @@
 local ApacheTestVer = "2.4";
 local MeriadbTestVer = "10.3";
-local PhpTestVers = ["7.0", "7.1", "7.2"];
+local PhpTestVers = ["7.0", "7.1", "7.2", "7.3"];
 
 local CommonEnv = {
   "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306, 80:crm:80",
@@ -137,7 +137,7 @@ local PipeNotify =
         debug: true,
         content_type: "application/x-www-form-urlencoded",
         template: |||
-          {{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}** {{#each job.status}}[![Status](https://img.shields.io/badge/{{this.name}}-{{this.status}}-brightgreen.svg)](){{/each}} [({{build.number}})]({{build.link}}) by {{build.author}}
+          {{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}**[({{build.number}})]({{build.link}}) {{#each job.status}}{{#success this.status}}![Status](https://img.shields.io/badge/{{this.name}}-{{this.status}}-success.svg){{else}}![Status](https://img.shields.io/badge/{{this.name}}-{{this.status}}-critical.svg){{/success}}{{/each}} by {{build.author}}
         |||
       },
     },
