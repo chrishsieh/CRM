@@ -47,18 +47,6 @@ steps:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
     PHP_MODULES_DISABLE: xdebug
 
-- name: notify
-  image: plugins/webhook
-  settings:
-    content_type: application/x-www-form-urlencoded
-    template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test PHP:7.0 **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}"
-    urls:
-      from_secret: gitter_webhok
-  when:
-    status:
-    - success
-    - failure
-
 services:
 - name: mysql
   image: cytopia/mariadb-10.3
@@ -144,18 +132,6 @@ steps:
   environment:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
     PHP_MODULES_DISABLE: xdebug
-
-- name: notify
-  image: plugins/webhook
-  settings:
-    content_type: application/x-www-form-urlencoded
-    template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test PHP:7.1 **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}"
-    urls:
-      from_secret: gitter_webhok
-  when:
-    status:
-    - success
-    - failure
 
 services:
 - name: mysql
@@ -243,18 +219,6 @@ steps:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
     PHP_MODULES_DISABLE: xdebug
 
-- name: notify
-  image: plugins/webhook
-  settings:
-    content_type: application/x-www-form-urlencoded
-    template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test PHP:7.2 **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}"
-    urls:
-      from_secret: gitter_webhok
-  when:
-    status:
-    - success
-    - failure
-
 services:
 - name: mysql
   image: cytopia/mariadb-10.3
@@ -341,18 +305,6 @@ steps:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
     PHP_MODULES_DISABLE: xdebug
 
-- name: notify
-  image: plugins/webhook
-  settings:
-    content_type: application/x-www-form-urlencoded
-    template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test PHP:7.3 **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}"
-    urls:
-      from_secret: gitter_webhok
-  when:
-    status:
-    - success
-    - failure
-
 services:
 - name: mysql
   image: cytopia/mariadb-10.3
@@ -389,5 +341,40 @@ services:
   volumes:
   - name: shm
     path: /dev/shm:/dev/shm
+
+---
+kind: pipeline
+name: Notify
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  disable: true
+
+steps:
+- name: notify
+  image: chrishsieh/drone_webhook
+  settings:
+    content_type: application/x-www-form-urlencoded
+    on_failure: always
+    on_success: always
+    template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}**[({{build.number}})]({{build.link}}) {{#each job.status}}{{#success this.status}}![Status](https://img.shields.io/badge/{{this.name}}-{{this.status}}-success.svg){{else}}![Status](https://img.shields.io/badge/{{this.name}}-{{this.status}}-critical.svg){{/success}}{{/each}} by {{build.author}}\n"
+    token:
+      from_secret: drone_api
+    urls:
+      from_secret: gitter_webhok
+
+trigger:
+  status:
+  - success
+  - failure
+
+depends_on:
+- PHP:7.0
+- PHP:7.1
+- PHP:7.2
+- PHP:7.3
 
 ...
