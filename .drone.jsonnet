@@ -159,7 +159,6 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
   steps: [
     StepBuild(PhpTestVer),
     StepTest(PhpTestVer),
-    StepGitter("PHP:"+PhpTestVer),
   ],
   services: [
     ServiceDb(MeriadbTestVer),
