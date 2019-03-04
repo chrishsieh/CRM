@@ -127,13 +127,13 @@ local PipeNotify =
     ],
   },
   depends_on: [
-    "PHP"+php_ver for php_ver in PhpTestVers
+    "PHP:"+php_ver for php_ver in PhpTestVers
   ],
 };
 local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
 {
   kind: "pipeline",
-  name: "PHP"+PhpTestVer,
+  name: "PHP:"+PhpTestVer,
   steps: [
     StepBuild(PhpTestVer),
     StepTest(PhpTestVer),
