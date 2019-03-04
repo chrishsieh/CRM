@@ -127,7 +127,7 @@ local PipeNotify =
     ],
   },
   depends_on: [
-    "PHP:"+php_ver for php_ver in PhpTestVers
+    "PHP"+php_ver for php_ver in PhpTestVers
   ],
 };
 local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =

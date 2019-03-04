@@ -372,9 +372,9 @@ trigger:
   - failure
 
 depends_on:
-- PHP:7.0
-- PHP:7.1
-- PHP:7.2
-- PHP:7.3
+- PHP7.0
+- PHP7.1
+- PHP7.2
+- PHP7.3
 
 ...
