@@ -7,24 +7,6 @@ local CommonEnv = {
   "PHP_MODULES_DISABLE": "xdebug",
 };
 local CommonPhpImg(ver) = "devilbox/php-fpm:"+ver+"-work";
-local StepGitter(php_string) =
-{
-  name: "notify",
-  image: "plugins/webhook",
-  settings: {
-    urls: {
-      from_secret: "gitter_webhok",
-    },
-    content_type: "application/x-www-form-urlencoded",
-    template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test " + php_string + " **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}",
-  },
-  when: {
-    status: [
-      "success",
-      "failure",
-    ],
-  },
-};
 local StepBuild(php_ver) = {
   name: "build",
   image: CommonPhpImg(php_ver),
@@ -128,7 +110,7 @@ local PipeNotify =
         token: {
           from_secret: "drone_api",
         },
-        on_success: "always",
+        on_success: "change",
         on_failure: "always",
 //        debug: true,
         content_type: "application/x-www-form-urlencoded",
