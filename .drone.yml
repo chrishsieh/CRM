@@ -323,7 +323,7 @@ steps:
     debug: true
     on_failure: always
     on_success: always
-    template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message={{#each build.pipename as |name|}}{{name}}:{{build.pipestatus[0]}}-{{build.pipestatus[@index]}}-{{build.pipestatus[{{@index}}]}}{{/each}}Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}** [({{build.number}})]({{build.link}}) by {{build.author}}\n"
+    template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message={{#each build.pipename as |name|}}{{name}}:{{build.pipestatus}}[{{@index}}]{{/each}}Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}** [({{build.number}})]({{build.link}}) by {{build.author}}\n"
     token:
       from_secret: drone_api
     urls:
