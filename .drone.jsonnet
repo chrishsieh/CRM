@@ -126,11 +126,19 @@ local PipeNotify =
       name: "notify",
       image: "chrishsieh/drone_webhook",
       settings: {
+        urls: {
+          from_secret: "gitter_webhok",
+        },
         token: {
           from_secret: "drone_api",
         },
         on_success: "always",
         on_failure: "always",
+        debug: true,
+        content_type: "application/x-www-form-urlencoded",
+        template: |||
+          "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message={{#each config.pipename}}{{this}}:{{config.pipestatus[{{@index}}]}}{{/each}}Drone [{{ repo.owner }}/{{ repo.name }}](https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}) ({{ build.branch }}) Test " + php_string + " **{{ build.status }}** [({{ build.number }})]({{ build.link }}) by {{ build.author }}",
+        |||
       },
     },
   ],
