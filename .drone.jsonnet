@@ -137,7 +137,7 @@ local PipeNotify =
         debug: true,
         content_type: "application/x-www-form-urlencoded",
         template: |||
-          {{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message={{pipename}}{{/each}} Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}** [({{build.number}})]({{build.link}}) by {{build.author}}
+          {{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message={{pipename}}Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}** [({{build.number}})]({{build.link}}) by {{build.author}}
         |||
       },
     },
