@@ -137,7 +137,7 @@ local PipeNotify =
         debug: true,
         content_type: "application/x-www-form-urlencoded",
         template: |||
-          {{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}** {{#each job.status}}{{this.name}}:{{this.status}} {{/each}} [({{build.number}})]({{build.link}}) by {{build.author}}
+          {{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) **{{build.status}}** {{#each job.status}}[![Status](https://img.shields.io/badge/{{this.name}}-{{this.status}}-brightgreen.svg)](){{/each}} [({{build.number}})]({{build.link}}) by {{build.author}}
         |||
       },
     },
