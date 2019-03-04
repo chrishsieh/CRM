@@ -133,7 +133,7 @@ local PipeNotify =
 local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
 {
   kind: "pipeline",
-  name: "PHP:"+PhpTestVer,
+  name: "PHP"+PhpTestVer,
   steps: [
     StepBuild(PhpTestVer),
     StepTest(PhpTestVer),
