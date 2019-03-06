@@ -228,6 +228,15 @@ steps:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
     PHP_MODULES_DISABLE: xdebug
 
+- name: Pipeline Wait
+  image: chrishsieh/drone_pipeline_wait
+  settings:
+    token:
+      from_secret: drone_api
+    wait_pipelines:
+    - PHP:7.1
+    - PHP:7.2
+
 services:
 - name: mysql
   image: cytopia/mariadb-10.3

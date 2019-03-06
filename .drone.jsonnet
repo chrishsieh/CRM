@@ -48,6 +48,16 @@ local StepTest(php_ver) = {
       "npm run test",
     ],
 };
+local StepPipeWait = {
+  name: "Pipeline Wait",
+  image: "chrishsieh/drone_pipeline_wait",
+  settings: {
+    wait_pipelines: std.setDiff(["PHP:"+php_ver for php_ver in PhpTestVers], ["PHP:"+php_ver for php_ver in PhpPackageVers]),
+    token: {
+      from_secret: "drone_api",
+    },
+  },
+};
 local ServiceDb(meriadb_ver) = {
   name: "mysql",
   image: "cytopia/mariadb-" + meriadb_ver,
@@ -145,7 +155,7 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
     StepTest(PhpTestVer),
   ] + (
     if std.count(PhpPackageVers, PhpTestVer) == 0 then [] else [
-      // Package follow
+      StepPipeWait,
     ]
   ),
   services: [
