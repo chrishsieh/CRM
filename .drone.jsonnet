@@ -1,6 +1,7 @@
 local ApacheTestVer = "2.4";
 local MeriadbTestVer = "10.3";
 local PhpTestVers = ["7.1", "7.2", "7.3"];
+local PhpPackageVers = ["7.3"];
 
 local CommonEnv = {
   "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306, 80:crm:80",
@@ -142,7 +143,11 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
   steps: [
     StepBuild(PhpTestVer),
     StepTest(PhpTestVer),
-  ],
+  ] + (
+    if std.count(PhpPackageVers, PhpTestVer) == 0 then [] else [
+      // Package follow
+    ]
+  ),
   services: [
     ServiceDb(MeriadbTestVer),
     ServicePhp(PhpTestVer),
