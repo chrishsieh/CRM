@@ -58,6 +58,14 @@ local StepPipeWait = {
     },
   },
 };
+local StepPackage(php_ver) = {
+  name: "Package-" + php_ver,
+  image: CommonPhpImg(php_ver),
+  environment: CommonEnv,
+  commands: [
+      "npm run package",
+    ],
+};
 local ServiceDb(meriadb_ver) = {
   name: "mysql",
   image: "cytopia/mariadb-" + meriadb_ver,
@@ -156,6 +164,7 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
   ] + (
     if std.count(PhpPackageVers, PhpTestVer) == 0 then [] else [
       StepPipeWait,
+      StepPackage(PhpTestVer),
     ]
   ),
   services: [
