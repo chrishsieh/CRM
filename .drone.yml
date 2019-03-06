@@ -6,6 +6,9 @@ platform:
   os: linux
   arch: amd64
 
+clone:
+  depth: 1
+
 steps:
 - name: build
   image: devilbox/php-fpm:7.1-work
@@ -92,6 +95,9 @@ platform:
   os: linux
   arch: amd64
 
+clone:
+  depth: 1
+
 steps:
 - name: build
   image: devilbox/php-fpm:7.2-work
@@ -177,6 +183,9 @@ name: PHP:7.3
 platform:
   os: linux
   arch: amd64
+
+clone:
+  depth: 1
 
 steps:
 - name: build

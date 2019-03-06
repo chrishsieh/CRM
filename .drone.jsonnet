@@ -136,6 +136,9 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
 {
   kind: "pipeline",
   name: "PHP:"+PhpTestVer,
+  clone: {
+    depth: 1,
+  },
   steps: [
     StepBuild(PhpTestVer),
     StepTest(PhpTestVer),
