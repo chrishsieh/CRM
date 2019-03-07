@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 export
+set -x
 buildversion=`grep \"version\" package.json | cut -d ',' -f1 | cut -d'"' -f4`
 demoKey=$1
 file=target/ChurchCRM-$buildversion.zip

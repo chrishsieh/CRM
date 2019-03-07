@@ -62,7 +62,9 @@ local StepPackage(php_ver) = {
   name: "Package-" + php_ver,
   image: CommonPhpImg(php_ver),
   environment: {
-    demoKey:"test",
+    demoKey: {
+      from_secret: "testkey",
+    }
   },
   commands: [
       "chown -R www-data:www-data /drone/src/src",
