@@ -45,7 +45,6 @@ steps:
   - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;
   - cp ./drone-ci/Config.php ./src/Include/Config.php
   - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
-  - npm run test
   environment:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
     PHP_MODULES_DISABLE: xdebug
@@ -134,7 +133,6 @@ steps:
   - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;
   - cp ./drone-ci/Config.php ./src/Include/Config.php
   - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
-  - npm run test
   environment:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
     PHP_MODULES_DISABLE: xdebug
@@ -223,7 +221,6 @@ steps:
   - mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;
   - cp ./drone-ci/Config.php ./src/Include/Config.php
   - cp ./drone-ci/behat.yml ./tests/behat/behat.yml
-  - npm run test
   environment:
     FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
     PHP_MODULES_DISABLE: xdebug

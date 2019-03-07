@@ -45,7 +45,7 @@ local StepTest(php_ver) = {
       "mysql --user=root --password=churchcrm --host=mysql churchcrm_test < demo/ChurchCRM-Database.sql;",
       "cp ./drone-ci/Config.php ./src/Include/Config.php",
       "cp ./drone-ci/behat.yml ./tests/behat/behat.yml",
-      "npm run test",
+//      "npm run test",
     ],
 };
 local StepPipeWait = {
