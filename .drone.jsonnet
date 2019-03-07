@@ -62,10 +62,10 @@ local StepPackage(php_ver) = {
   name: "Package-" + php_ver,
   image: CommonPhpImg(php_ver),
   environment: {
-    demoKey: {
+    "demo_Key": {
       from_secret: "testkey",
     },
-    "GitHub_token": {
+    "GREN_GITHUB_TOKEN": {
       from_secret: "github_api",
     },
   },

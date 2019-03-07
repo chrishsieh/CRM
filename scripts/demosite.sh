@@ -13,7 +13,7 @@ commitHash=`git log --pretty=format:'%H' -n 1`
 if [ -f $file  ]; then
 
   if [[ -z "${demoKey}" ]]; then
-    demoKey=$demokey  
+    demoKey="${demo_Key}"
   fi
 
   if [[ -z "${demoKey}" ]]; then
