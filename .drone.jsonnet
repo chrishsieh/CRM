@@ -57,6 +57,12 @@ local StepPipeWait = {
       from_secret: "drone_api",
     },
   },
+  when: {
+    branch: [
+      "master",
+      "develop",
+    ],
+  },
 };
 local StepPackage(php_ver) = {
   name: "Package-" + php_ver,

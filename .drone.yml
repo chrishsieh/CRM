@@ -236,6 +236,10 @@ steps:
     wait_pipelines:
     - PHP:7.1
     - PHP:7.2
+  when:
+    branch:
+    - master
+    - develop
 
 - name: Package-7.3
   image: devilbox/php-fpm:7.3-work
