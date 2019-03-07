@@ -240,10 +240,11 @@ steps:
 - name: Package-7.3
   image: devilbox/php-fpm:7.3-work
   commands:
+  - chown -R www-data:www-data /drone/src/src
   - npm run package
+  - npm run demosite
   environment:
-    FORWARD_PORTS_TO_LOCALHOST: "3306:mysql:3306, 80:crm:80"
-    PHP_MODULES_DISABLE: xdebug
+    demoKey: test
 
 services:
 - name: mysql
@@ -299,7 +300,7 @@ steps:
   settings:
     content_type: application/x-www-form-urlencoded
     on_failure: always
-    on_success: change
+    on_success: always
     pipeline_name: Notify
     template: "{{#success build.status}}icon=smile{{else}}icon=frown{{/success}}&message=Drone [{{repo.owner}}/{{repo.name}}](https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{build.commit}}) ({{build.branch}}) [**{{build.status}}**]({{build.link}})({{build.number}})\\n{{#each job.status}}{{#success this.status}}![Status](https://img.shields.io/badge/{{this.name}}-O-success.svg){{else}}![Status](https://img.shields.io/badge/{{this.name}}-X-critical.svg){{/success}}{{/each}} by {{build.author}}\n"
     token:

@@ -1,7 +1,7 @@
 local ApacheTestVer = "2.4";
 local MeriadbTestVer = "10.3";
 local PhpTestVers = ["7.1", "7.2", "7.3"];
-local PhpPackageVers = ["7.3"];
+local PhpPackageVer = "7.3";
 
 local CommonEnv = {
   "FORWARD_PORTS_TO_LOCALHOST": "3306:mysql:3306, 80:crm:80",
@@ -52,7 +52,7 @@ local StepPipeWait = {
   name: "Pipeline Wait",
   image: "chrishsieh/drone_pipeline_wait",
   settings: {
-    wait_pipelines: std.setDiff(["PHP:"+php_ver for php_ver in PhpTestVers], ["PHP:"+php_ver for php_ver in PhpPackageVers]),
+    wait_pipelines: std.setDiff(["PHP:"+php_ver for php_ver in PhpTestVers], ["PHP:"+ PhpPackageVer]),
     token: {
       from_secret: "drone_api",
     },
@@ -61,9 +61,13 @@ local StepPipeWait = {
 local StepPackage(php_ver) = {
   name: "Package-" + php_ver,
   image: CommonPhpImg(php_ver),
-  environment: CommonEnv,
+  environment: {
+    demoKey:"test",
+  },
   commands: [
+      "chown -R www-data:www-data /drone/src/src",
       "npm run package",
+      "npm run demosite",
     ],
 };
 local ServiceDb(meriadb_ver) = {
@@ -131,7 +135,7 @@ local PipeNotify =
           from_secret: "drone_api",
         },
         pipeline_name: pipe_obj.name,
-        on_success: "change",
+        on_success: "always",
         on_failure: "always",
 //        debug: true,
         content_type: "application/x-www-form-urlencoded",
@@ -162,7 +166,7 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
     StepBuild(PhpTestVer),
     StepTest(PhpTestVer),
   ] + (
-    if std.count(PhpPackageVers, PhpTestVer) == 0 then [] else [
+    if std.count([PhpPackageVer], PhpTestVer) == 0 then [] else [
       StepPipeWait,
       StepPackage(PhpTestVer),
     ]
