@@ -64,7 +64,10 @@ local StepPackage(php_ver) = {
   environment: {
     demoKey: {
       from_secret: "testkey",
-    }
+    },
+    "GitHub_token": {
+      from_secret: "github_api",
+    },
   },
   commands: [
       "chown -R www-data:www-data /drone/src/src",
@@ -72,6 +75,29 @@ local StepPackage(php_ver) = {
       "npm run demosite",
       "npm run changelog-gen",
     ],
+};
+local StepRelease(php_ver) = {
+  name: "publish",
+  image: "plugins/github-release",
+  settings: {
+    "api_key": {
+      from_secret: "github_api",
+    },
+    files: [
+      "churchcrm/*",
+    ],
+    checksum: [
+      "md5",
+      "sha1",
+      "sha256",
+      "crc32",
+    ],
+  },
+  when: {
+    event: [
+      "tag",
+    ],
+  },
 };
 local ServiceDb(meriadb_ver) = {
   name: "mysql",
@@ -172,6 +198,7 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
     if std.count([PhpPackageVer], PhpTestVer) == 0 then [] else [
       StepPipeWait,
       StepPackage(PhpTestVer),
+      StepRelease(PhpTestVer),
     ]
   ),
   services: [

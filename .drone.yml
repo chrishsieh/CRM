@@ -245,8 +245,26 @@ steps:
   - npm run demosite
   - npm run changelog-gen
   environment:
+    GitHub_token:
+      from_secret: github_api
     demoKey:
       from_secret: testkey
+
+- name: publish
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: github_api
+    checksum:
+    - md5
+    - sha1
+    - sha256
+    - crc32
+    files:
+    - "churchcrm/*"
+  when:
+    event:
+    - tag
 
 services:
 - name: mysql
