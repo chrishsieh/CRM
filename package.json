@@ -1,10 +1,10 @@
 {
-    "name": "church_crm",
+    "name": "ChurchCRM",
     "version": "3.3.0",
     "description": "Free Church CRM Software",
     "repository": {
         "type": "git",
-        "url": "https://github.com/chrishsieh/CRM.git"
+        "url": "https://github.com/ChurchCRM/CRM.git"
     },
     "keywords": [
         "Church",

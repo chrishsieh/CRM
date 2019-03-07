@@ -70,11 +70,17 @@ local StepPackage(php_ver) = {
     },
   },
   commands: [
-      "chown -R www-data:www-data /drone/src/src",
-      "npm run package",
-      "npm run demosite",
-      "npm run changelog-gen",
+    "chown -R www-data:www-data /drone/src/src",
+    "npm run package",
+    "npm run demosite",
+    "npm run changelog-gen",
+  ],
+  when: {
+    branch: [
+      "master",
+      "develop",
     ],
+  },
 };
 local StepRelease(php_ver) = {
   name: "publish",
@@ -92,8 +98,12 @@ local StepRelease(php_ver) = {
       "sha256",
       "crc32",
     ],
+    note: "CHANGELOG.md",
   },
   when: {
+    branch: [
+      "master",
+    ],
     event: [
       "tag",
     ],

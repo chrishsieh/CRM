@@ -416,7 +416,7 @@ module.exports = function (grunt) {
         },
         exec: {
             updatechangelog: {
-                cmd: "gren changelog --generate --override"
+                cmd: "gren changelog --generate --override --token=<%= buildConfig.GitHub.token %>"
             }
         },
         lineending: {

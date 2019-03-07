@@ -249,6 +249,10 @@ steps:
       from_secret: github_api
     demo_Key:
       from_secret: testkey
+  when:
+    branch:
+    - master
+    - develop
 
 - name: publish
   image: plugins/github-release
@@ -262,7 +266,10 @@ steps:
     - crc32
     files:
     - "churchcrm/*"
+    note: CHANGELOG.md
   when:
+    branch:
+    - master
     event:
     - tag
 
