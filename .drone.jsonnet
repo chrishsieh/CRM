@@ -79,6 +79,7 @@ local StepPackage(php_ver) = {
     "chown -R www-data:www-data /drone/src/src",
     "npm run package",
     "npm run demosite",
+    "sed -i 's/ --token=<%= buildConfig.GitHub.token %>//g' ./Gruntfile.js",
     "npm run changelog-gen",
   ],
   when: {
