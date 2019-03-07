@@ -70,6 +70,7 @@ local StepPackage(php_ver) = {
       "chown -R www-data:www-data /drone/src/src",
       "npm run package",
       "npm run demosite",
+      "npm run changelog-gen",
     ],
 };
 local ServiceDb(meriadb_ver) = {

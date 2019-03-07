@@ -243,6 +243,7 @@ steps:
   - chown -R www-data:www-data /drone/src/src
   - npm run package
   - npm run demosite
+  - npm run changelog-gen
   environment:
     demoKey:
       from_secret: testkey
