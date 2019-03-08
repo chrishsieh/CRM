@@ -65,26 +65,43 @@ local StepPipeWait = {
   },
 };
 local StepPackage(php_ver) = {
-  name: "Package-" + php_ver,
+  name: "Package",
   image: CommonPhpImg(php_ver),
   environment: {
     "demo_Key": {
       from_secret: "testkey",
-    },
-    "GREN_GITHUB_TOKEN": {
-      from_secret: "github_api",
     },
   },
   commands: [
     "chown -R www-data:www-data /drone/src/src",
     "npm run package",
     "npm run demosite",
-    "npm run changelog-gen",
   ],
   when: {
     branch: [
       "master",
       "develop",
+    ],
+  },
+};
+local StepChangelog(php_ver) = {
+  name: "Changelog",
+  image: CommonPhpImg(php_ver),
+  environment: {
+    "GREN_GITHUB_TOKEN": {
+      from_secret: "github_api",
+    },
+  },
+  commands: [
+    "npm run changelog-gen",
+  ],
+  when: {
+    branch: [
+      "master",
+    ],
+    event: [
+      "release",
+      "tag",
     ],
   },
 };
@@ -97,12 +114,10 @@ local StepRelease(php_ver) = {
     },
     files: [
       "churchcrm/*",
+      "target/ChurchCRM*",
     ],
     checksum: [
-      "md5",
       "sha1",
-      "sha256",
-      "crc32",
     ],
     note: "CHANGELOG.md",
   },
@@ -111,6 +126,7 @@ local StepRelease(php_ver) = {
       "master",
     ],
     event: [
+      "release",
       "tag",
     ],
   },
@@ -214,6 +230,7 @@ local PipeMain(ApacheTestVer, MeriadbTestVer, PhpTestVer) =
     if std.count([PhpPackageVer], PhpTestVer) == 0 then [] else [
       StepPipeWait,
       StepPackage(PhpTestVer),
+      StepChangelog(PhpTestVer),
       StepRelease(PhpTestVer),
     ]
   ),
